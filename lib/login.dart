@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -22,7 +25,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _email, _password; // modificamos para permitir nulo
+  String? _nome, _password;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +41,8 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                onSaved: (value) => _email = value,
+                decoration: InputDecoration(labelText: 'Nome do Usuário'),
+                onSaved: (value) => _nome = value,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Senha'),
@@ -49,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 16.0),
               Container(
                 height: 44.0,
-                 child: TextButton(
+                child: TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.blue,
                     primary: Colors.white,
@@ -65,12 +68,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
-      // TODO: autenticar usuário com email e senha
-      print('Email: $_email, Senha: $_password');
+      final url = Uri.parse('https://fakestoreapi.com/auth/login');
+      final response = await http.post(
+        url,
+        body: json.encode({'Nome do Usuário': _nome, 'password': _password}),
+      );
+      final responseData = json.decode(response.body);
+      print(responseData);
+      // TODO: verificar se o login foi bem sucedido e navegar para a próxima tela
     }
   }
 }

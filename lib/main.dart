@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 import 'product_page.dart';
 import 'login.dart';
+import 'cart.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'E-commerce',
+      title: 'PI DELTA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('E-commerce'),
+        title: Text('Home'),
         actions: [
           IconButton(
             icon: Icon(Icons.person, color: _iconColor),
@@ -64,6 +65,15 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
+          IconButton(
+             icon: Icon(Icons.shopping_cart, color: _iconColor),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CartPage()),
+    );
+  },
+),
         ],
       ),
       body: Column(
