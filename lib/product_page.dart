@@ -30,6 +30,13 @@ class ProductPage extends StatelessWidget {
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
+            Expanded(
+              child: Image.network(
+                product.image,
+                fit: BoxFit.contain,
+              ),
+            ),
+            SizedBox(height: 16.0),
             Text(
               'R\$ ${product.price.toStringAsFixed(2)}',
               style: TextStyle(

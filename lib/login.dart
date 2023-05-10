@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -80,6 +79,21 @@ class _LoginPageState extends State<LoginPage> {
       final responseData = json.decode(response.body);
       print(responseData);
       // TODO: verificar se o login foi bem sucedido e navegar para a próxima tela
+      if (responseData['statusCode'] == 401) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Erro de autenticação"),
+          content: Text("Usuário ou senha inválidos."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
     }
   }
 }
