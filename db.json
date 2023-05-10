@@ -1,0 +1,72 @@
+{
+  "cart": [
+    {
+      "id": 3,
+      "userId": 2,
+      "date": "2020-03-01T00:00:00.000Z",
+      "products": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+            "price": 109.95,
+            "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+            "category": "men's clothing",
+            "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+            "rating": {
+              "rate": 3.9,
+              "count": 120
+            }
+          },
+          "quantity": 2
+        }
+      ]
+    }
+  ],
+  "sale": [
+    {
+      "id": 2,
+      "date": "2020-03-01T00:00:00.000Z",
+      "userId": 1,
+      "itens": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+            "price": 109.95,
+            "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+            "category": "men's clothing",
+            "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+            "rating": {
+              "rate": 3.9,
+              "count": 120
+            }
+          },
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "date": "2020-03-01T00:00:00.000Z",
+      "userId": 1,
+      "itens": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+            "price": 109.95,
+            "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+            "category": "men's clothing",
+            "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+            "rating": {
+              "rate": 3.9,
+              "count": 120
+            }
+          },
+          "quantity": 2
+        }
+      ],
+      "id": 3
+    }
+  ]
+}

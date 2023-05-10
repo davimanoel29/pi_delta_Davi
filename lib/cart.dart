@@ -14,7 +14,7 @@ class _CartPageState extends State<CartPage> {
   List<CartItem> _cartItems = [];
 
   Future<void> _fetchCartItems() async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/carts/1'));
+    final response = await http.get(Uri.parse('http://localhost:3000/cart/'));
     if (response.statusCode == 200) {
       setState(() {
         final data = json.decode(response.body);
