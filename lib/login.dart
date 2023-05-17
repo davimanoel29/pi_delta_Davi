@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'main.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,7 +25,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _nome, _password;
+  String? _username, _password;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(labelText: 'Nome do Usuário'),
-                onSaved: (value) => _nome = value,
+                onSaved: (value) => _username = value,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Senha'),
@@ -74,26 +75,41 @@ class _LoginPageState extends State<LoginPage> {
       final url = Uri.parse('https://fakestoreapi.com/auth/login');
       final response = await http.post(
         url,
-        body: json.encode({'Nome do Usuário': _nome, 'password': _password}),
+        body: {
+          "username": _username,
+          "password": _password,
+        },
       );
       final responseData = json.decode(response.body);
       print(responseData);
-      // TODO: verificar se o login foi bem sucedido e navegar para a próxima tela
-      if (responseData['statusCode'] == 401) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Erro de autenticação"),
-          content: Text("Usuário ou senha inválidos."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
+      // Verificar se o login foi bem sucedido
+      if (response.statusCode == 200) {
+        final token = responseData['token'];
+        // Verificar se o token foi retornado
+        if (token != null && token.isNotEmpty) {
+          // Navegar para a próxima tela
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
             ),
-          ],
-        ),
-      );
-    }
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text("Erro de autenticação"),
+              content: Text("Usuário ou senha inválidos."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                ),
+              ],
+            ),
+          );
+        }
+      } 
     }
   }
 }
