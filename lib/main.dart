@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            product.name,
+                            product.title,
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
