@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+        primarySwatch: Colors.brown
+        ),
       home: LoginPage(),
     );
   }
@@ -32,36 +32,49 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
+        backgroundColor: Color(0xFFA52502),        
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Nome do Usuário'),
-                onSaved: (value) => _username = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Senha'),
-                obscureText: true,
-                onSaved: (value) => _password = value,
-              ),
-              SizedBox(height: 16.0),
-              Container(
-                height: 44.0,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    primary: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'images/logo.jpg',
+                      width: 300,
+                      height: 300,
+                    ),
                   ),
-                  onPressed: _submit,
-                  child: Text('Entrar'),
-                ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Nome do Usuário'),
+                    onSaved: (value) => _username = value,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Senha'),
+                    obscureText: true,
+                    onSaved: (value) => _password = value,
+                  ),
+                  SizedBox(height: 16.0),
+                  Container(
+                    height: 44.0,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xFFA52502),
+                        primary: Colors.white,
+                      ),
+                      onPressed: _submit,
+                      child: Text('Entrar'),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

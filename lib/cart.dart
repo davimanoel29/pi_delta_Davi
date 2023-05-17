@@ -89,7 +89,8 @@ class _CartPageState extends State<CartPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carrinho'),
+        title: Text('Meu Carrinho'),
+        backgroundColor: Color(0xFFA52502),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -162,6 +163,9 @@ class _CartPageState extends State<CartPage> {
                               SizedBox(height: 8.0),
                               ElevatedButton(
                                 onPressed: () => _removeCartItem(cartItem),
+                                  style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(int.parse('0xFF1C8394')),
+                                ),
                                 child: Text('Remover'),
                               ),
                             ],
@@ -188,6 +192,9 @@ class _CartPageState extends State<CartPage> {
             padding: EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: _finishPurchase,
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFA52502),
+              ),
               child: Text('Finalizar Compra'),
             ),
           ),

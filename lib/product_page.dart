@@ -18,6 +18,7 @@ class _ProductPageState extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.product.title),
+        backgroundColor: Color(0xFFA52502),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -54,8 +55,12 @@ class _ProductPageState extends State<ProductPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
+                
                 addToCart(widget.product, 1);
               },
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFA52502),
+            ),
               child: Text('Adicionar ao carrinho'),
             ),
           ],
@@ -78,8 +83,6 @@ class _ProductPageState extends State<ProductPage> {
                     "description": product.description,
                     "category": product.category,
                     "image": product.image,
-                    //"rate": product.rate,
-                    //"count": product.count, 
                     "quantity": 1
       }
       ),
