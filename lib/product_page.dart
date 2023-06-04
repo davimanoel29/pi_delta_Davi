@@ -6,7 +6,7 @@ import 'dart:convert';
 class ProductPage extends StatefulWidget {
   final Product product;
 
-  ProductPage(this.product);
+  ProductPage({required this.product});
 
   @override
   _ProductPageState createState() => _ProductPageState();
