@@ -5,7 +5,6 @@ import 'main.dart';
 
 void main() => runApp(MyApp());
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,8 +12,8 @@ class MyApp extends StatelessWidget {
       title: 'PI DELTA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.brown
-        ),
+        primarySwatch: Colors.brown,
+      ),
       home: LoginPage(),
     );
   }
@@ -34,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
-        backgroundColor: Color(0xFFA52502),        
+        backgroundColor: Color(0xFFA52502),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -74,6 +73,14 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text('Entrar'),
                     ),
                   ),
+                  SizedBox(height: 8.0),
+                  Container(
+                    height: 44.0,
+                    child: TextButton(
+                      onPressed: _navigateToSignUp,
+                      child: Text('Criar cadastro'),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -96,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
       final responseData = json.decode(response.body);
-      print(responseData);
       // Verificar se o login foi bem sucedido
       if (response.statusCode == 200) {
         final token = responseData['token'];
@@ -124,7 +130,146 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         }
-      } 
+      }
     }
+  }
+
+  void _navigateToSignUp() {
+    // Navegar para a tela de cadastro
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpPage()),
+    );
+  }
+}
+
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _createAccount() async {
+    final name = {'firstname': _nameController.text};
+    final userData = {
+      'email': _emailController.text,
+      'username': _usernameController.text,
+      'password': _passwordController.text,
+      'name': name
+    };
+
+    final url = Uri.parse('https://fakestoreapi.com/users');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(userData),
+    );
+
+  if (response.statusCode == 200) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Cadastro realizado"),
+        content: Text("O cadastro foi criado com sucesso."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Fechar o diálogo
+              Navigator.pop(context);
+              // Retornar para a página de login
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Erro"),
+          content: Text("Ocorreu um erro ao criar o cadastro."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cadastro'),
+        backgroundColor: Color(0xFFA52502),
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Preencha os campos abaixo para criar um novo cadastro',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16.0),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Nome Completo'),
+                  controller: _nameController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Username'),
+                  controller: _usernameController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Email'),
+                  controller: _emailController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Senha'),
+                  obscureText: true,
+                  controller: _passwordController,
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  height: 44.0,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFFA52502),
+                      primary: Colors.white,
+                    ),
+                    onPressed: _createAccount,
+                    child: Text('Criar cadastro'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

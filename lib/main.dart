@@ -300,7 +300,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductPage(product: product),
+        builder: (context) => ProductPage(productId: product.id),
       ),
     );
   }

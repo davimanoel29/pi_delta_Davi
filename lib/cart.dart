@@ -10,50 +10,41 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<dynamic> _cartItems = [];
 
-  Future<void> _fetchCartItems() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/cart'));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        _cartItems = List<dynamic>.from(data);
-      });
-    } else {
-      throw Exception('Failed to load cart items');
-    }
+Future<void> _fetchCartItems() async {
+  final response = await http.get(Uri.parse('http://localhost:3000/cart'));
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    setState(() {
+      for (var item in data) {
+        final existingItem = _cartItems.firstWhere(
+          (cartItem) => cartItem['idProduct'] == item['idProduct'],
+          orElse: () => null,
+        );
+        if (existingItem != null) {
+          existingItem['quantity']++;
+        } else {
+          _cartItems.add(item);
+        }
+      }
+    });
+  } else {
+    throw Exception('Failed to load cart items');
   }
+}
 
-  Future<void> _finishPurchase() async {
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/sale'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(_cartItems),
-    );
 
-    if (response.statusCode == 200) {
-      // Falha ao finalizar a compra
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Erro'),
-            content: Text('Ocorreu um erro ao finalizar a compra.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
 
-      setState(() {
-        _cartItems.clear();
-      });
-    } else {
-      // Sucesso ao finalizar a compra
+Future<void> _finishPurchase() async {
+  final response = await http.post(
+    Uri.parse('http://localhost:3000/sale'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(_cartItems),
+  );
+
+  if (response.statusCode == 200) {
+    // Finalizar a compra com sucesso, agora vamos limpar o carrinho
+    final deleteResponse = await http.delete(Uri.parse('http://localhost:3000/cart'));
+    if (deleteResponse.statusCode == 200) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -71,8 +62,56 @@ class _CartPageState extends State<CartPage> {
           );
         },
       );
+
+      setState(() {
+        _cartItems.clear();
+      });
+    } else {
+      // Falha ao limpar o carrinho
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Erro'),
+            content: Text('Ocorreu um erro ao finalizar a compra. Por favor, tente novamente.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
+  } else {
+    // Falha ao finalizar a compra
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Erro'),
+          content: Text('Ocorreu um erro ao finalizar a compra.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    setState(() {
+      _cartItems.clear();
+    });
   }
+}
+
 
   @override
   void initState() {
@@ -217,32 +256,56 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  void _removeCartItem(dynamic cartItem) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Remover Produto'),
-          content: Text('Deseja remover este produto do carrinho?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Remover'),
-              onPressed: () {
+void _removeCartItem(dynamic cartItem) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Remover Produto'),
+        content: Text('Deseja remover este produto do carrinho?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Remover'),
+            onPressed: () async {
+              final url = Uri.parse('http://localhost:3000/cart/${cartItem['id']}/?idProduct=${cartItem['idProduct']}');
+              final response = await http.delete(url);
+              if (response.statusCode == 200) {
                 setState(() {
                   _cartItems.remove(cartItem);
                 });
                 Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Erro'),
+                      content: Text('Ocorreu um erro ao remover o produto do carrinho. Por favor, tente novamente.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 }
