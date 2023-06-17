@@ -7,6 +7,7 @@ import 'login.dart';
 import 'cart.dart';
 import 'information.dart';
 import 'category.dart';
+import 'auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,17 +17,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
+      title: 'PI DELTA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.brown,
       ),
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  final String username;
+
+  HomePage({required this.username});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -40,12 +45,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late Animation<double> _sidebarAnimation;
   List<String> _categories = [];
   String _selectedCategory = '';
+  String? _userId;
 
   @override
   void initState() {
     super.initState();
     _fetchProducts();
     _fetchCategories();
+    _fetchUserId();
 
     _animationController = AnimationController(
       vsync: this,
@@ -88,6 +95,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     }
   }
 
+  Future<void> _fetchUserId() async {
+    final response = await http.get(Uri.parse('https://fakestoreapi.com/users'));
+    if (response.statusCode == 200) {
+      final users = json.decode(response.body);
+      final user = users.firstWhere((user) => user['username'] == widget.username, orElse: () => null);
+      if (user != null) {
+        setState(() {
+          _userId = user['id'].toString();
+        });
+      }
+    } else {
+      throw Exception('Failed to load user data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,11 +136,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         actions: [
           IconButton(
             icon: Icon(Icons.person, color: _iconColor),
+            tooltip: widget.username,
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
+              // Check if the userId is available
+              if (_userId != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AuthPage(userId: _userId!)),
+                );
+              } else {
+                // Handle the case where userId is not available
+              }
             },
           ),
           IconButton(
@@ -188,12 +216,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                                                                  Image.network(
-                                      product.image, // URL da imagem
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.contain, // Define o modo de exibição da imagem
-                                    ),
+                              Image.network(
+                                product.image, // URL da imagem
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.contain, // Define o modo de exibição da imagem
+                              ),
                               Text(
                                 product.title,
                                 style: TextStyle(
@@ -257,13 +285,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   _isSidebarOpen = false;
                                   _animationController.reverse();
                                 });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CategoryPage(category: _selectedCategory),
-                                  ),
-                                );
                               },
+                              title: Text(
+                                'Categorias',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: _selectedCategory == '' ? FontWeight.bold : FontWeight.normal,
+                                ),
+                              ),
                             );
                           }
                           final category = _categories[index - 1];
@@ -299,9 +328,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void _showProductPage(BuildContext context, Product product) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ProductPage(productId: product.id),
-      ),
+      MaterialPageRoute(builder: (context) => ProductPage(productId: product.id)),
     );
   }
 }

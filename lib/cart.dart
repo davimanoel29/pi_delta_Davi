@@ -41,7 +41,7 @@ Future<void> _finishPurchase() async {
     body: jsonEncode(_cartItems),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 201) {
     // Finalizar a compra com sucesso, agora vamos limpar o carrinho
     final deleteResponse = await http.delete(Uri.parse('http://localhost:3000/cart'));
     if (deleteResponse.statusCode == 200) {

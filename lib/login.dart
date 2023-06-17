@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => HomePage(username: _username!),
             ),
           );
         } else {
@@ -241,11 +241,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _nameController,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Username'),
+                  decoration: InputDecoration(labelText: 'Nome de Usuário'),
                   controller: _usernameController,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(labelText: 'E-mail'),
                   controller: _emailController,
                 ),
                 TextFormField(

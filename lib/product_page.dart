@@ -82,7 +82,7 @@ return Scaffold(
         ),
         SizedBox(height: 16.0),
         Text(
-          'R\$ ${_product?.price?.toStringAsFixed(2) ?? ''}',
+          'R\$ ${_product?.price.toStringAsFixed(2) ?? ''}',
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
