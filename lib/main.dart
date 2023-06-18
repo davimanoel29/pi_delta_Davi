@@ -36,7 +36,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final Color _iconColor = Colors.white;
   List<Product> _products = [];
   TextEditingController _searchController = TextEditingController();
@@ -74,10 +75,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _fetchProducts() async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/products'));
+    final response =
+        await http.get(Uri.parse('https://fakestoreapi.com/products'));
     if (response.statusCode == 200) {
       setState(() {
-        _products = List<Product>.from(json.decode(response.body).map((product) => Product.fromJson(product)));
+        _products = List<Product>.from(json
+            .decode(response.body)
+            .map((product) => Product.fromJson(product)));
       });
     } else {
       throw Exception('Failed to load products');
@@ -85,7 +89,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _fetchCategories() async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/products/categories'));
+    final response = await http
+        .get(Uri.parse('https://fakestoreapi.com/products/categories'));
     if (response.statusCode == 200) {
       setState(() {
         _categories = List<String>.from(json.decode(response.body));
@@ -96,10 +101,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Future<void> _fetchUserId() async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/users'));
+    final response =
+        await http.get(Uri.parse('https://fakestoreapi.com/users'));
     if (response.statusCode == 200) {
       final users = json.decode(response.body);
-      final user = users.firstWhere((user) => user['username'] == widget.username, orElse: () => null);
+      final user = users.firstWhere(
+          (user) => user['username'] == widget.username,
+          orElse: () => null);
       if (user != null) {
         setState(() {
           _userId = user['id'].toString();
@@ -142,7 +150,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               if (_userId != null) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AuthPage(userId: _userId!)),
+                  MaterialPageRoute(
+                      builder: (context) => AuthPage(userId: _userId!)),
                 );
               } else {
                 // Handle the case where userId is not available
@@ -151,15 +160,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ),
           IconButton(
             icon: Icon(Icons.shopping_cart, color: _iconColor),
+            tooltip: 'Carrinho',
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CartPage(userId: _userId!)));
             },
           ),
           IconButton(
             icon: Icon(Icons.info, color: _iconColor),
+            tooltip: 'Informações',
             onPressed: () {
               Navigator.push(
                 context,
@@ -179,7 +190,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: TextField(
                   controller: _searchController,
                   onChanged: (value) {
-                    setState(() {}); // Atualizar a exibição da lista com base no valor digitado
+                    setState(
+                        () {}); // Atualizar a exibição da lista com base no valor digitado
                   },
                   decoration: InputDecoration(
                     hintText: 'Pesquisar produtos',
@@ -204,9 +216,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     final product = _products[index];
                     // Verificar se o título ou a descrição do produto contêm o valor de pesquisa
                     if (_searchController.text.isNotEmpty &&
-                        !product.title.toLowerCase().contains(_searchController.text.toLowerCase()) &&
-                        !product.description.toLowerCase().contains(_searchController.text.toLowerCase())) {
-                      return SizedBox.shrink(); // Oculta o item da lista se não corresponder à pesquisa
+                        !product.title
+                            .toLowerCase()
+                            .contains(_searchController.text.toLowerCase()) &&
+                        !product.description
+                            .toLowerCase()
+                            .contains(_searchController.text.toLowerCase())) {
+                      return SizedBox
+                          .shrink(); // Oculta o item da lista se não corresponder à pesquisa
                     }
                     return GestureDetector(
                       onTap: () => _showProductPage(context, product),
@@ -220,7 +237,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 product.image, // URL da imagem
                                 height: 100,
                                 width: 100,
-                                fit: BoxFit.contain, // Define o modo de exibição da imagem
+                                fit: BoxFit
+                                    .contain, // Define o modo de exibição da imagem
                               ),
                               Text(
                                 product.title,
@@ -250,7 +268,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           AnimatedBuilder(
             animation: _animationController,
             builder: (context, _) {
-              final slide = MediaQuery.of(context).size.width * 0.8 * _sidebarAnimation.value;
+              final slide = MediaQuery.of(context).size.width *
+                  0.8 *
+                  _sidebarAnimation.value;
               return Stack(
                 children: [
                   if (_isSidebarOpen)
@@ -273,7 +293,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       color: Colors.white,
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height,
-                      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
                       child: ListView.builder(
                         itemCount: _categories.length + 1,
                         itemBuilder: (context, index) {
@@ -290,7 +311,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 'Categorias',
                                 style: TextStyle(
                                   fontSize: 18.0,
-                                  fontWeight: _selectedCategory == '' ? FontWeight.bold : FontWeight.normal,
+                                  fontWeight: _selectedCategory == ''
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
                             );
@@ -307,7 +330,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CategoryPage(category: category),
+                                  builder: (context) => CategoryPage(
+                                      category: category, userId: _userId!),
                                 ),
                               );
                             },
@@ -328,7 +352,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void _showProductPage(BuildContext context, Product product) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProductPage(productId: product.id)),
+      MaterialPageRoute(
+          builder: (context) =>
+              ProductPage(productId: product.id, userId: _userId!)),
     );
   }
 }

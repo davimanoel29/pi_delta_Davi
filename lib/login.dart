@@ -102,34 +102,51 @@ class _LoginPageState extends State<LoginPage> {
           "password": _password,
         },
       );
-      final responseData = json.decode(response.body);
-      // Verificar se o login foi bem sucedido
-      if (response.statusCode == 200) {
-        final token = responseData['token'];
-        // Verificar se o token foi retornado
-        if (token != null && token.isNotEmpty) {
-          // Navegar para a próxima tela
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(username: _username!),
-            ),
-          );
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text("Erro de autenticação"),
-              content: Text("Usuário ou senha inválidos."),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("OK"),
-                ),
-              ],
-            ),
-          );
+
+      try {
+        final responseData = json.decode(response.body);
+        // Verificar se o login foi bem sucedido
+        if (response.statusCode == 200) {
+          final token = responseData['token'];
+          // Verificar se o token foi retornado
+          if (token != null && token.isNotEmpty) {
+            // Navegar para a próxima tela
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(username: _username!),
+              ),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Erro de autenticação"),
+                content: Text("Usuário ou senha inválidos."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("OK"),
+                  ),
+                ],
+              ),
+            );
+          }
         }
+      } catch (error) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Erro"),
+            content: Text("Usuário e/ou senha inválidos."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
       }
     }
   }
@@ -180,25 +197,25 @@ class _SignUpPageState extends State<SignUpPage> {
       body: json.encode(userData),
     );
 
-  if (response.statusCode == 200) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Cadastro realizado"),
-        content: Text("O cadastro foi criado com sucesso."),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Fechar o diálogo
-              Navigator.pop(context);
-              // Retornar para a página de login
-              Navigator.pop(context);
-            },
-            child: Text("OK"),
-          ),
-        ],
-      ),
-    );
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Cadastro realizado"),
+          content: Text("O cadastro foi criado com sucesso."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Fechar o diálogo
+                Navigator.pop(context);
+                // Retornar para a página de login
+                Navigator.pop(context);
+              },
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
     } else {
       showDialog(
         context: context,
@@ -239,19 +256,46 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Nome Completo'),
                   controller: _nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor, digite seu nome completo';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Nome de Usuário'),
                   controller: _usernameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor, digite um nome de usuário';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-mail'),
                   controller: _emailController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor, digite um endereço de e-mail';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Por favor, digite um e-mail válido';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Senha'),
                   obscureText: true,
                   controller: _passwordController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Por favor, digite uma senha';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 16.0),
                 Container(

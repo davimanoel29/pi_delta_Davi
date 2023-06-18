@@ -29,11 +29,12 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _fetchSales() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:3000/sale?userId=${widget.userId}'));
+    final response = await http
+        .get(Uri.parse('http://localhost:3000/sale?userId=${widget.userId}'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
-      final sales = List<Sale>.from(jsonData.map((sale) => Sale.fromJson(sale)));
+      final sales =
+          List<Sale>.from(jsonData.map((sale) => Sale.fromJson(sale)));
       setState(() {
         _sales = sales;
       });
@@ -43,7 +44,8 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _fetchUser() async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/users/${widget.userId}'));
+    final response = await http
+        .get(Uri.parse('https://fakestoreapi.com/users/${widget.userId}'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final user = User.fromJson(jsonData);
@@ -55,17 +57,6 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
-  Future<Product> _fetchProduct(int productId) async {
-    final response = await http.get(Uri.parse('https://fakestoreapi.com/products/$productId'));
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      final product = Product.fromJson(jsonData);
-      return product;
-    } else {
-      throw Exception('Failed to load product');
-    }
-  }
-
   void _logout() {
     Navigator.pushAndRemoveUntil(
       context,
@@ -74,13 +65,13 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildProductInfo(Product product, ProductInfo productInfo) {
+  Widget _buildProductInfo(ProductInfo productInfo) {
     return Container(
       margin: EdgeInsets.only(bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Produto: ${product.title}'),
+          Text('Produto: ${productInfo.title}'),
           Text('Quantidade: ${productInfo.quantity}'),
           Text('Preço: R\$${productInfo.price.toStringAsFixed(2)}'),
         ],
@@ -89,10 +80,6 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<Card> _buildCard(Sale sale) async {
-    final products = await Future.wait(sale.products.map(
-      (productInfo) => _fetchProduct(productInfo.id),
-    ));
-
     return Card(
       child: ExpansionTile(
         title: Text('Ordem de Compra ID: ${sale.id}'),
@@ -102,16 +89,22 @@ class _AuthPageState extends State<AuthPage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 8), // Adiciona um espaço entre "Data da Compra" e "Products"
+                SizedBox(
+                  height: 8,
+                ),
                 Text('Data da Compra: ${sale.date.toString().split(' ')[0]}'),
-                SizedBox(height: 8), // Adiciona um espaço entre "Data da Compra" e a lista de produtos
+                SizedBox(
+                  height: 8,
+                ),
                 Text('Produtos:'),
-                SizedBox(height: 8), // Adiciona um espaço entre "Data da Compra" e a lista de produtos
+                SizedBox(
+                  height: 8,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (var i = 0; i < products.length; i++)
-                      _buildProductInfo(products[i], sale.products[i]),
+                    for (var productInfo in sale.products)
+                      _buildProductInfo(productInfo),
                   ],
                 ),
               ],
@@ -216,8 +209,9 @@ class Sale {
   });
 
   factory Sale.fromJson(Map<String, dynamic> json) {
-    final productsData = json['idproducts'] as List<dynamic>;
-    final products = productsData.map((data) => ProductInfo.fromJson(data)).toList();
+    final productsData = json['saleproducts'] as List<dynamic>;
+    final products =
+        productsData.map((data) => ProductInfo.fromJson(data)).toList();
 
     return Sale(
       id: json['id'],
@@ -230,19 +224,22 @@ class Sale {
 }
 
 class ProductInfo {
-  final int id;
+  final int idproduct;
+  final String title;
   final int quantity;
   final double price;
 
   ProductInfo({
-    required this.id,
+    required this.idproduct,
+    required this.title,
     required this.quantity,
     required this.price,
   });
 
   factory ProductInfo.fromJson(Map<String, dynamic> json) {
     return ProductInfo(
-      id: json['id'],
+      idproduct: json['idproduct'],
+      title: json['title'],
       quantity: json['quantity'],
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
     );

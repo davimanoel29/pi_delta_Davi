@@ -5,8 +5,9 @@ import 'product_page.dart'; // Import the existing product_page.dart file
 
 class CategoryPage extends StatefulWidget {
   final String category;
+  final String userId;
 
-  CategoryPage({required this.category});
+  CategoryPage({required this.category, required this.userId});
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
@@ -22,8 +23,8 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Future<void> _fetchCategoryProducts() async {
-    final response = await http.get(
-        Uri.parse('https://fakestoreapi.com/products/category/${widget.category}'));
+    final response = await http.get(Uri.parse(
+        'https://fakestoreapi.com/products/category/${widget.category}'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -39,7 +40,8 @@ class _CategoryPageState extends State<CategoryPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductPage(productId: int.parse(productId)),
+        builder: (context) =>
+            ProductPage(productId: int.parse(productId), userId: widget.userId),
       ),
     );
   }

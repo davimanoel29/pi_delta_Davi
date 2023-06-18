@@ -6,7 +6,6 @@ class Product {
   final String image;
   final String category;
 
-
   Product({
     required this.id,
     required this.title,
@@ -27,5 +26,3 @@ class Product {
     );
   }
 }
-
-
