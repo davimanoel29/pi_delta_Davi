@@ -45,10 +45,6 @@ class _ProductPageState extends State<ProductPage> {
             _pageState = ProductPageState.error;
           });
         }
-      } else {
-        setState(() {
-          _pageState = ProductPageState.error;
-        });
       }
     } catch (error) {
       setState(() {
@@ -75,47 +71,78 @@ class _ProductPageState extends State<ProductPage> {
           child: CircularProgressIndicator(),
         );
       case ProductPageState.success:
-        return Padding(
-          padding: EdgeInsets.all(16.0),
+        return SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                _product?.title ?? '',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               SizedBox(height: 16.0),
-              Text(
-                _product?.description ?? '',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              SizedBox(height: 16.0),
-              Expanded(
+              Center(
                 child: Image.network(
                   _product?.image ?? '',
+                  height: 300.0,
+                  width: 300.0,
                   fit: BoxFit.contain,
                 ),
               ),
               SizedBox(height: 16.0),
-              Text(
-                'R\$ ${_product?.price.toStringAsFixed(2) ?? ''}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      _product?.title ?? '',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      _product?.category ?? '',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      'R\$ ${_product?.price.toStringAsFixed(2) ?? ''}',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Text(
+                      _product?.description ?? '',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        addToCart(_product!, 1);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFA52502),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.0,
+                          horizontal: 16.0,
+                        ),
+                      ),
+                      child: Text(
+                        'Adicionar ao Carrinho',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  addToCart(_product!, 1);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFA52502),
-                ),
-                child: Text('Adicionar ao carrinho'),
               ),
             ],
           ),
@@ -130,6 +157,27 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void addToCart(Product product, int quantity) async {
+    // Primeiro, faça uma solicitação para obter os itens do carrinho do usuário
+    final cartResponse = await http.get(
+      Uri.parse('http://localhost:3000/cart?userId=${widget.userId}'),
+    );
+
+    if (cartResponse.statusCode == 200) {
+      final cartItems = jsonDecode(cartResponse.body) as List<dynamic>;
+
+      // Verifique se o produto já está no carrinho
+      bool isProductInCart =
+          cartItems.any((item) => item['idProduct'] == product.id);
+
+      if (isProductInCart) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Produto já está no carrinho')),
+        );
+        return; // Retorna imediatamente se o produto já estiver no carrinho
+      }
+    }
+
+    // Se o produto não estiver no carrinho, faça a solicitação para adicioná-lo
     final response = await http.post(
       Uri.parse('http://localhost:3000/cart'),
       headers: {'Content-Type': 'application/json'},

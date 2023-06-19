@@ -1,134 +1,19 @@
 {
-  "cart": [
-    {
-      "userId": "7",
-      "date": "2023-06-18T18:29:15.785",
-      "idProduct": 14,
-      "title": "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor (LC49HG90DMNXZA) – Super Ultrawide Screen QLED ",
-      "price": 999.99,
-      "description": "49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR with dual 27 inch screen side by side QUANTUM DOT (QLED) TECHNOLOGY, HDR support and factory calibration provides stunningly realistic and accurate color and contrast 144HZ HIGH REFRESH RATE and 1ms ultra fast response time work to eliminate motion blur, ghosting, and reduce input lag",
-      "category": "electronics",
-      "image": "https://fakestoreapi.com/img/81Zt42ioCgL._AC_SX679_.jpg",
-      "quantity": 1,
-      "id": 3
-    }
-  ],
+  "cart": [],
   "sale": [
     {
       "userId": 1,
-      "date": "2023-06-18T15:38:10.120",
-      "total": 148.92000000000002,
-      "saleproducts": [
-        {
-          "idproduct": 1,
-          "title": "Teste",
-          "quantity": 1,
-          "price": 109.95
-        },
-        {
-          "idproduct": 20,
-          "title": "Teste2",
-          "quantity": 3,
-          "price": 12.99
-        }
-      ],
-      "id": 1
-    },
-    {
-      "userId": 1,
-      "date": "2023-06-18T17:27:31.225",
-      "total": 1649.25,
-      "saleproducts": [
-        {
-          "idproduct": 1,
-          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-          "quantity": 15,
-          "price": 109.95
-        }
-      ],
-      "id": 2
-    },
-    {
-      "userId": 1,
-      "date": "2023-06-18T18:04:11.876",
-      "total": 219.9,
-      "saleproducts": [
-        {
-          "idproduct": 1,
-          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-          "quantity": 2,
-          "price": 109.95
-        }
-      ],
-      "id": 3
-    },
-    {
-      "userId": 7,
-      "date": "2023-06-18T18:16:58.122",
-      "total": 38.29,
-      "saleproducts": [
-        {
-          "idproduct": 2,
-          "title": "Mens Casual Premium Slim Fit T-Shirts ",
-          "quantity": 1,
-          "price": 22.3
-        },
-        {
-          "idproduct": 4,
-          "title": "Mens Casual Slim Fit",
-          "quantity": 1,
-          "price": 15.99
-        }
-      ],
-      "id": 4
-    },
-    {
-      "userId": 7,
-      "date": "2023-06-18T18:25:42.073",
-      "total": 111.98,
-      "saleproducts": [
-        {
-          "idproduct": 3,
-          "title": "Mens Cotton Jacket",
-          "quantity": 2,
-          "price": 55.99
-        }
-      ],
-      "id": 5
-    },
-    {
-      "userId": 7,
-      "date": "2023-06-18T18:27:19.591",
-      "total": 1140,
+      "date": "2023-06-19T00:44:35.935",
+      "total": 114,
       "saleproducts": [
         {
           "idproduct": 12,
           "title": "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive",
-          "quantity": 10,
+          "quantity": 1,
           "price": 114
         }
       ],
-      "id": 6
-    },
-    {
-      "userId": 7,
-      "date": "2023-06-18T18:30:03.245",
-      "total": 25598.75,
-      "saleproducts": [
-        {
-          "idproduct": 13,
-          "title": "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin",
-          "quantity": 1,
-          "price": 599
-        },
-        {
-          "idproduct": 14,
-          "title": "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor (LC49HG90DMNXZA) – Super Ultrawide Screen QLED ",
-          "quantity": 25,
-          "price": 999.99
-        }
-      ],
-      "id": 7
+      "id": 1
     }
   ]
 }

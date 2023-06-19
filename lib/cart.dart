@@ -15,22 +15,11 @@ class _CartPageState extends State<CartPage> {
   List<dynamic> _cartItems = [];
 
   Future<void> _fetchCartItems() async {
-    final response = await http
-        .get(Uri.parse('http://localhost:3000/cart?userId=${widget.userId}'));
+    final response = await http.get(Uri.parse('http://localhost:3000/cart?userId=${widget.userId}'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        for (var item in data) {
-          final existingItem = _cartItems.firstWhere(
-            (cartItem) => cartItem['idProduct'] == item['idProduct'],
-            orElse: () => null,
-          );
-          if (existingItem != null) {
-            existingItem['quantity']++;
-          } else {
-            _cartItems.add(item);
-          }
-        }
+        _cartItems = data;
       });
     } else {
       throw Exception('Failed to load cart items');
@@ -39,14 +28,12 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _finishPurchase() async {
     if (_cartItems.isEmpty) {
-      // Display an error dialog if the cart is empty
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Erro'),
-            content: Text(
-                'Não é possível finalizar a compra. O carrinho está vazio.'),
+            content: Text('Não é possível finalizar a compra. O carrinho está vazio.'),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -61,7 +48,6 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    // Criar uma lista de produtos no formato esperado
     List<Map<String, dynamic>> saleProducts = [];
     for (var item in _cartItems) {
       saleProducts.add({
@@ -72,7 +58,6 @@ class _CartPageState extends State<CartPage> {
       });
     }
 
-    // Create the purchase data object
     Map<String, dynamic> purchaseData = {
       'userId': int.parse(widget.userId),
       'date': DateTime.now().toIso8601String(),
@@ -80,7 +65,6 @@ class _CartPageState extends State<CartPage> {
       'saleproducts': saleProducts,
     };
 
-    // Send the POST request to finalize the purchase
     final response = await http.post(
       Uri.parse('http://localhost:3000/sale'),
       headers: {'Content-Type': 'application/json'},
@@ -88,19 +72,15 @@ class _CartPageState extends State<CartPage> {
     );
 
     if (response.statusCode == 201) {
-      // Purchase successful, now delete each product from the cart
       for (var item in _cartItems) {
-        final deleteResponse = await http.delete(Uri.parse(
-            'http://localhost:3000/cart/${item['id']}/?userId=${item['userId']}'));
+        final deleteResponse = await http.delete(Uri.parse('http://localhost:3000/cart/${item['id']}/?userId=${item['userId']}'));
         if (deleteResponse.statusCode != 200) {
-          // Display an error dialog if deleting a product fails
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Erro'),
-                content: Text(
-                    'Ocorreu um erro ao remover um produto do carrinho. Por favor, tente novamente.'),
+                content: Text('Ocorreu um erro ao remover um produto do carrinho. Por favor, tente novamente.'),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),
@@ -116,12 +96,10 @@ class _CartPageState extends State<CartPage> {
         }
       }
 
-      // Clear the cart after successful purchase and deletion
       setState(() {
         _cartItems.clear();
       });
 
-      // Display a success dialog
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -140,14 +118,12 @@ class _CartPageState extends State<CartPage> {
         },
       );
     } else {
-      // Display an error dialog if the purchase fails
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Erro'),
-            content: Text(
-                'Ocorreu um erro ao finalizar a compra. Por favor, tente novamente.'),
+            content: Text('Ocorreu um erro ao finalizar a compra. Por favor, tente novamente.'),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -204,6 +180,8 @@ class _CartPageState extends State<CartPage> {
               itemBuilder: (context, index) {
                 final cartItem = _cartItems[index];
                 return Card(
+                  elevation: 2,
+                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Row(
@@ -242,13 +220,11 @@ class _CartPageState extends State<CartPage> {
                                   SizedBox(width: 8.0),
                                   IconButton(
                                     icon: Icon(Icons.remove),
-                                    onPressed: () =>
-                                        _decreaseQuantity(cartItem),
+                                    onPressed: () => _decreaseQuantity(cartItem),
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.add),
-                                    onPressed: () =>
-                                        _increaseQuantity(cartItem),
+                                    onPressed: () => _increaseQuantity(cartItem),
                                   ),
                                 ],
                               ),
@@ -256,10 +232,16 @@ class _CartPageState extends State<CartPage> {
                               ElevatedButton(
                                 onPressed: () => _removeCartItem(cartItem),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Color(int.parse('0xFF1C8394')),
+                                  backgroundColor: Color(0xFF1C8394),
                                 ),
-                                child: Text('Remover'),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.delete),
+                                    SizedBox(width: 8.0),
+                                    Text('Remover'),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -271,19 +253,20 @@ class _CartPageState extends State<CartPage> {
               },
             ),
           ),
-          Padding(
+          Container(
+            color: Colors.grey[200],
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+              children: [
                 Text(
-                  'Total: R\$${total.toStringAsFixed(2)}',
+                  'Total: R\$ $total',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: 8.0),
                 ElevatedButton(
                   onPressed: _finishPurchase,
                   style: ElevatedButton.styleFrom(
@@ -313,13 +296,13 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  void _removeCartItem(dynamic cartItem) {
+  void _removeCartItem(Map<String, dynamic> cartItem) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Remover Produto'),
-          content: Text('Deseja remover este produto do carrinho?'),
+          title: Text('Remover Item'),
+          content: Text('Tem certeza de que deseja remover este item do carrinho?'),
           actions: <Widget>[
             TextButton(
               child: Text('Cancelar'),
@@ -330,9 +313,7 @@ class _CartPageState extends State<CartPage> {
             TextButton(
               child: Text('Remover'),
               onPressed: () async {
-                final url = Uri.parse(
-                    'http://localhost:3000/cart/${cartItem['id']}/?idProduct=${cartItem['idProduct']}');
-                final response = await http.delete(url);
+                final response = await http.delete(Uri.parse('http://localhost:3000/cart/${cartItem['id']}/?userId=${cartItem['userId']}'));
                 if (response.statusCode == 200) {
                   setState(() {
                     _cartItems.remove(cartItem);
@@ -344,8 +325,7 @@ class _CartPageState extends State<CartPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Erro'),
-                        content: Text(
-                            'Ocorreu um erro ao remover o produto do carrinho. Por favor, tente novamente.'),
+                        content: Text('Ocorreu um erro ao remover o item do carrinho. Por favor, tente novamente.'),
                         actions: <Widget>[
                           TextButton(
                             child: Text('OK'),
@@ -366,3 +346,5 @@ class _CartPageState extends State<CartPage> {
     );
   }
 }
+
+

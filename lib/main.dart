@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   final Color _iconColor = Colors.white;
   List<Product> _products = [];
+  List<Product> _searchResults = [];
   TextEditingController _searchController = TextEditingController();
   bool _isSidebarOpen = false;
   late AnimationController _animationController;
@@ -190,8 +191,13 @@ class _HomePageState extends State<HomePage>
                 child: TextField(
                   controller: _searchController,
                   onChanged: (value) {
-                    setState(
-                        () {}); // Atualizar a exibição da lista com base no valor digitado
+                    setState(() {
+                      _searchResults = _products
+                          .where((product) => product.title
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
+                          .toList();
+                    });
                   },
                   decoration: InputDecoration(
                     hintText: 'Pesquisar produtos',
@@ -210,53 +216,75 @@ class _HomePageState extends State<HomePage>
               ),
               SizedBox(height: 16.0),
               Expanded(
-                child: ListView.builder(
-                  itemCount: _products.length,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                  ),
+                  itemCount: _searchController.text.isNotEmpty
+                      ? _searchResults.length
+                      : _products.length,
                   itemBuilder: (context, index) {
-                    final product = _products[index];
-                    // Verificar se o título ou a descrição do produto contêm o valor de pesquisa
-                    if (_searchController.text.isNotEmpty &&
-                        !product.title
-                            .toLowerCase()
-                            .contains(_searchController.text.toLowerCase()) &&
-                        !product.description
-                            .toLowerCase()
-                            .contains(_searchController.text.toLowerCase())) {
-                      return SizedBox
-                          .shrink(); // Oculta o item da lista se não corresponder à pesquisa
-                    }
-                    return GestureDetector(
+                    final product = _searchController.text.isNotEmpty
+                        ? _searchResults[index]
+                        : _products[index];
+                    return InkWell(
                       onTap: () => _showProductPage(context, product),
-                      child: Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Image.network(
-                                product.image, // URL da imagem
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit
-                                    .contain, // Define o modo de exibição da imagem
-                              ),
-                              Text(
-                                product.title,
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4.0,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(8.0),
+                                ),
+                                child: Image.network(
+                                  product.image,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'R\$ ${product.price.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.title,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(
+                                    'R\$ ${product.price.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -291,7 +319,7 @@ class _HomePageState extends State<HomePage>
                     transform: Matrix4.translationValues(slide, 0, 0),
                     child: Container(
                       color: Colors.white,
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       height: MediaQuery.of(context).size.height,
                       padding:
                           EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
@@ -319,22 +347,30 @@ class _HomePageState extends State<HomePage>
                             );
                           }
                           final category = _categories[index - 1];
-                          return ListTile(
-                            title: Text(category),
-                            onTap: () {
-                              setState(() {
-                                _selectedCategory = category;
-                                _isSidebarOpen = false;
-                                _animationController.reverse();
-                              });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CategoryPage(
-                                      category: category, userId: _userId!),
-                                ),
-                              );
-                            },
+                          return Card(
+                            elevation: 2.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: ListTile(
+                              title: Text(category),
+                              onTap: () {
+                                setState(() {
+                                  _selectedCategory = category;
+                                  _isSidebarOpen = false;
+                                  _animationController.reverse();
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CategoryPage(
+                                      category: category,
+                                      userId: _userId!,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           );
                         },
                       ),

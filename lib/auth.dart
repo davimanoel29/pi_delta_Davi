@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'login.dart';
-import 'product.dart';
 
 class AuthPage extends StatefulWidget {
   final String userId;
@@ -29,12 +28,10 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _fetchSales() async {
-    final response = await http
-        .get(Uri.parse('http://localhost:3000/sale?userId=${widget.userId}'));
+    final response = await http.get(Uri.parse('http://localhost:3000/sale?userId=${widget.userId}'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
-      final sales =
-          List<Sale>.from(jsonData.map((sale) => Sale.fromJson(sale)));
+      final sales = List<Sale>.from(jsonData.map((sale) => Sale.fromJson(sale)));
       setState(() {
         _sales = sales;
       });
@@ -44,8 +41,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Future<void> _fetchUser() async {
-    final response = await http
-        .get(Uri.parse('https://fakestoreapi.com/users/${widget.userId}'));
+    final response = await http.get(Uri.parse('https://fakestoreapi.com/users/${widget.userId}'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final user = User.fromJson(jsonData);
@@ -79,7 +75,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Future<Card> _buildCard(Sale sale) async {
+  Card _buildCard(Sale sale) {
     return Card(
       child: ExpansionTile(
         title: Text('Ordem de Compra ID: ${sale.id}'),
@@ -89,17 +85,11 @@ class _AuthPageState extends State<AuthPage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 Text('Data da Compra: ${sale.date.toString().split(' ')[0]}'),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 Text('Produtos:'),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -174,16 +164,7 @@ class _AuthPageState extends State<AuthPage> {
             child: ListView.builder(
               itemCount: _sales.length,
               itemBuilder: (context, index) {
-                return FutureBuilder<Card>(
-                  future: _buildCard(_sales[index]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return snapshot.data!;
-                    } else {
-                      return Container(); // ou um widget de carregamento
-                    }
-                  },
-                );
+                return _buildCard(_sales[index]);
               },
             ),
           ),
@@ -210,8 +191,7 @@ class Sale {
 
   factory Sale.fromJson(Map<String, dynamic> json) {
     final productsData = json['saleproducts'] as List<dynamic>;
-    final products =
-        productsData.map((data) => ProductInfo.fromJson(data)).toList();
+    final products = productsData.map((data) => ProductInfo.fromJson(data)).toList();
 
     return Sale(
       id: json['id'],

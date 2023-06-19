@@ -12,7 +12,8 @@ class MyApp extends StatelessWidget {
       title: 'PI DELTA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: LoginPage(),
     );
@@ -64,10 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 16.0),
                   Container(
                     height: 44.0,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFA52502),
-                        primary: Colors.white,
+                        foregroundColor: Colors.white,
                       ),
                       onPressed: _submit,
                       child: Text('Entrar'),
@@ -122,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
               context: context,
               builder: (context) => AlertDialog(
                 title: Text("Erro de autenticação"),
-                content: Text("Usuário ou senha inválidos."),
+                content: Text("Usuário e/ou senha inválidos."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -190,46 +191,48 @@ class _SignUpPageState extends State<SignUpPage> {
       'name': name
     };
 
-    final url = Uri.parse('https://fakestoreapi.com/users');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(userData),
-    );
+    if (_formKey.currentState!.validate()) {
+      final url = Uri.parse('https://fakestoreapi.com/users');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(userData),
+      );
 
-    if (response.statusCode == 200) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Cadastro realizado"),
-          content: Text("O cadastro foi criado com sucesso."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Fechar o diálogo
-                Navigator.pop(context);
-                // Retornar para a página de login
-                Navigator.pop(context);
-              },
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Erro"),
-          content: Text("Ocorreu um erro ao criar o cadastro."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Cadastro realizado"),
+            content: Text("O cadastro foi criado com sucesso."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // Fechar o diálogo
+                  Navigator.pop(context);
+                  // Retornar para a página de login
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Erro"),
+            content: Text("Ocorreu um erro ao criar o cadastro."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -300,10 +303,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 16.0),
                 Container(
                   height: 44.0,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFA52502),
-                      primary: Colors.white,
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: _createAccount,
                     child: Text('Criar cadastro'),
