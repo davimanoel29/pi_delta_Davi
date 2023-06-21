@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'login.dart';
 
-class AuthPage extends StatefulWidget {
+class UserPage extends StatefulWidget {
   final String userId;
 
-  AuthPage({required this.userId});
+  UserPage({required this.userId});
 
   @override
-  _AuthPageState createState() => _AuthPageState();
+  _UserPageState createState() => _UserPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _UserPageState extends State<UserPage> {
   List<Sale> _sales = [];
   User? _user;
 

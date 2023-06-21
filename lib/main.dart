@@ -7,7 +7,7 @@ import 'login.dart';
 import 'cart.dart';
 import 'information.dart';
 import 'category.dart';
-import 'auth.dart';
+import 'user.dart';
 
 void main() {
   runApp(MyApp());
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AuthPage(userId: _userId!)),
+                      builder: (context) => UserPage(userId: _userId!)),
                 );
               } else {
                 throw Exception('Falha ao carregar o ID do usuário');
