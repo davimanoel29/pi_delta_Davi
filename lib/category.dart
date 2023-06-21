@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'product_page.dart'; 
+import 'product_page.dart';
 
 class CategoryPage extends StatefulWidget {
   final String category;
@@ -32,7 +32,7 @@ class _CategoryPageState extends State<CategoryPage> {
         _products = List<dynamic>.from(data);
       });
     } else {
-      throw Exception('Failed to load category products');
+      throw Exception('Falha ao carregar a categoria de produtos');
     }
   }
 

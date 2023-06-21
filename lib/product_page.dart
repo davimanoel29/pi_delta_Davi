@@ -157,7 +157,6 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void addToCart(Product product, int quantity) async {
-    // Primeiro, faça uma solicitação para obter os itens do carrinho do usuário
     final cartResponse = await http.get(
       Uri.parse('http://localhost:3000/cart?userId=${widget.userId}'),
     );
@@ -173,11 +172,10 @@ class _ProductPageState extends State<ProductPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Produto já está no carrinho')),
         );
-        return; // Retorna imediatamente se o produto já estiver no carrinho
+        return;
       }
     }
 
-    // Se o produto não estiver no carrinho, faça a solicitação para adicioná-lo
     final response = await http.post(
       Uri.parse('http://localhost:3000/cart'),
       headers: {'Content-Type': 'application/json'},

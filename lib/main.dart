@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage>
             .map((product) => Product.fromJson(product)));
       });
     } else {
-      throw Exception('Failed to load products');
+      throw Exception('Falha ao carregar os produtos');
     }
   }
 
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage>
         _categories = List<String>.from(json.decode(response.body));
       });
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Falha ao carregar as categorias');
     }
   }
 
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage>
         });
       }
     } else {
-      throw Exception('Failed to load user data');
+      throw Exception('Falha ao carregar o ID do usuário');
     }
   }
 
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage>
                       builder: (context) => AuthPage(userId: _userId!)),
                 );
               } else {
-                // Handle the case where userId is not available
+                throw Exception('Falha ao carregar o ID do usuário');
               }
             },
           ),
@@ -193,9 +193,13 @@ class _HomePageState extends State<HomePage>
                   onChanged: (value) {
                     setState(() {
                       _searchResults = _products
-                          .where((product) => product.title
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
+                          .where((product) =>
+                              product.title
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()) ||
+                              product.description
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
                           .toList();
                     });
                   },
@@ -319,7 +323,7 @@ class _HomePageState extends State<HomePage>
                     transform: Matrix4.translationValues(slide, 0, 0),
                     child: Container(
                       color: Colors.white,
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height,
                       padding:
                           EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),

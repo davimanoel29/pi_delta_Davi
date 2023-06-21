@@ -106,12 +106,11 @@ class _LoginPageState extends State<LoginPage> {
 
       try {
         final responseData = json.decode(response.body);
-        // Verificar se o login foi bem sucedido
+
         if (response.statusCode == 200) {
           final token = responseData['token'];
           // Verificar se o token foi retornado
           if (token != null && token.isNotEmpty) {
-            // Navegar para a próxima tela
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -153,7 +152,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _navigateToSignUp() {
-    // Navegar para a tela de cadastro
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SignUpPage()),
@@ -208,9 +206,6 @@ class _SignUpPageState extends State<SignUpPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  // Fechar o diálogo
-                  Navigator.pop(context);
-                  // Retornar para a página de login
                   Navigator.pop(context);
                 },
                 child: Text("OK"),
