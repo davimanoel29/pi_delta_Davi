@@ -322,7 +322,7 @@ class _HomePageState extends State<HomePage>
                     transform: Matrix4.translationValues(slide, 0, 0),
                     child: Container(
                       color: Colors.white,
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       height: MediaQuery.of(context).size.height,
                       padding:
                           EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
