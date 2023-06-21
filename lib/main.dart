@@ -147,7 +147,6 @@ class _HomePageState extends State<HomePage>
             icon: Icon(Icons.person, color: _iconColor),
             tooltip: widget.username,
             onPressed: () {
-              // Check if the userId is available
               if (_userId != null) {
                 Navigator.push(
                   context,
