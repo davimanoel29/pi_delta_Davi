@@ -110,6 +110,34 @@
         }
       ],
       "id": 7
+    },
+    {
+      "userId": 1,
+      "date": "2023-09-10T17:49:55.454313",
+      "total": 391.93,
+      "saleproducts": [
+        {
+          "idproduct": 3,
+          "title": "Mens Cotton Jacket",
+          "quantity": 7,
+          "price": 55.99
+        }
+      ],
+      "id": 8
+    },
+    {
+      "userId": 1,
+      "date": "2023-09-10T18:18:20.702930",
+      "total": 4288.05,
+      "saleproducts": [
+        {
+          "idproduct": 1,
+          "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+          "quantity": 39,
+          "price": 109.95
+        }
+      ],
+      "id": 9
     }
   ]
 }
