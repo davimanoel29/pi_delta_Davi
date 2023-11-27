@@ -8,7 +8,8 @@ import 'cart.dart';
 import 'information.dart';
 import 'category.dart';
 import 'user.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'suporte.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -179,6 +180,16 @@ class _HomePageState extends State<HomePage>
               );
             },
           ),
+          IconButton(
+  icon: Icon(Icons.headset_mic, color: _iconColor),
+  tooltip: 'Suporte',
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SupportPage()),
+    );
+  },
+), 
         ],
       ),
       body: Stack(
@@ -395,12 +406,6 @@ class _HomePageState extends State<HomePage>
       MaterialPageRoute(
           builder: (context) =>
               ProductPage(productId: product.id, userId: _userId!)),
-    );
-  }
-  
-  WebView chatbotWebView() {
-    return WebView(
-      initialUrl: 'https://web-chat.global.assistant.watson.appdomain.cloud/versions/latest/WatsonAssistantChatEntry.html',
     );
   }
 }

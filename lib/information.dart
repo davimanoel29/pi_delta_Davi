@@ -25,7 +25,7 @@ class InformationPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Este aplicativo foi desenvolvido como parte final do PI BSI 5º Semestre.',
+                  'Este aplicativo foi desenvolvido como parte final do PI BSI 6º Semestre.',
                   style: TextStyle(fontSize: 16.0),
                 ),
                 SizedBox(height: 16.0),
@@ -38,6 +38,10 @@ class InformationPage extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text('Davi Manoel Silva Santos'),
+                Text('Felipe Parra Zelent'),
+                Text('Kevin de Almeida Melo Ferreira'),
+                Text('Murilo dos Santos Gregório'),
+                Text('Wellinston Oliveira da Silva'),
                 SizedBox(height: 16.0),
                 Text(
                   'Versão:',
@@ -47,7 +51,7 @@ class InformationPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                Text('1.0.0'),
+                Text('1.0.1'),
               ],
             ),
           ),

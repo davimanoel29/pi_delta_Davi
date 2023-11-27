@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suporte</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #A52502;
+            color: #FFF;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            flex-direction: column; /* Adicionado para alinhar verticalmente */
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .support-content {
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto 0; /* Centralizado no topo */
+            text-align: center; /* Centralizado horizontalmente */
+        }
+
+        .contact-info {
+            text-align: left;
+            margin-top: 20px;
+            margin-left: 20px; /* À esquerda */
+        }
+
+        .chatbot-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <span class="menu-icon" onclick="goBack()">←</span>
+        <h1>Suporte</h1>
+    </header>
+    <main>
+        <div class="support-content">
+            <h1>Bem-vindo à página de suporte de Delta Produtos Esportivos.</h1>
+            <div class="contact-info">
+                <h2>Informações de Contato:</h2>
+                <p>Telefone: (11) 1234-5678</p>
+                <p>E-mail: suporte@delta.com</p>
+                <p>Para mais informações, utilize no canto inferior direito nosso assistente virtual Delta.</p>
+            </div>
+        </div>
+        <div class="chatbot-container">
+            <script>
+                window.watsonAssistantChatOptions = {
+                    integrationID: "47e110dd-8723-4557-9294-f0ceadcb8aa4",
+                    region: "us-south",
+                    serviceInstanceID: "90c6dcc4-d1e3-44bb-818d-3bd4dc8c9ae0",
+                    onLoad: async (instance) => { await instance.render(); }
+                };
+                setTimeout(function () {
+                    const t = document.createElement('script');
+                    t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+                    document.head.appendChild(t);
+                });
+            </script>
+        </div>
+    </main>
+
+    <script>
+        function goBack() {
+            window.location.href = 'main.html';
+        }
+    </script>
+</body>
+
+</html>
